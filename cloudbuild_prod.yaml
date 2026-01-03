@@ -1,0 +1,12 @@
+steps:
+- name: "python"
+  script: |
+    #!/usr/bin/env python
+    print('Production')
+    with open('config_prod.py', encoding="utf-8") as f:
+      read_data = f.read()
+    with open('config.py', 'w',encoding="utf-8") as f:
+      f.write(read_data)
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ["functions", "deploy", "prod_ppt_alerts", "--entry-point=send_alerts", "--runtime=python37", "--timeout=540", "--memory=2048MB", "--trigger-topic=prod_run_ppt"]
+timeout: "1600s"
